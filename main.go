@@ -27,6 +27,7 @@ func main() {
 func ConnHandler(conn net.Conn) {
 	defer conn.Close()
 	for {
+		conn.Write([]byte("Input container what you want"))
 		message, err := bufio.NewReader(conn).ReadString('\n')
 		// handle client close connection
 		if err != nil {
@@ -35,6 +36,7 @@ func ConnHandler(conn net.Conn) {
 			return
 		}
 		fmt.Print("Message Received:", string(message))
-		conn.Write([]byte("test output"))
+		conn.Write([]byte("you are watching container :" + message))
+		Dc(conn, message[:len(message)-2])
 	}
 }
