@@ -2,15 +2,24 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"net"
 	"os"
 )
 
+var (
+	sock *string
+	port *string
+)
+
 func main() {
+	port = flag.String("p", "8081", "listen port")
+	sock = flag.String("sock", "unix:///var/run/docker.sock", "docker sock position")
+	flag.Parse()
 	fmt.Println("launch server")
 
-	ln, err := net.Listen("tcp", ":8081")
+	ln, err := net.Listen("tcp", ":"+*port)
 	if err != nil {
 		fmt.Println("err listen", err.Error())
 		os.Exit(2)

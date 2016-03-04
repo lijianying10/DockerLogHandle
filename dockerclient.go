@@ -9,7 +9,7 @@ import (
 )
 
 func Dc(conn net.Conn, id string) {
-	docker, err := dockerclient.NewDockerClient("unix:///var/run/docker.sock", nil)
+	docker, err := dockerclient.NewDockerClient(*sock, nil)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
