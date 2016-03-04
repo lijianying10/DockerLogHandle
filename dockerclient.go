@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"os"
 
 	"github.com/samalba/dockerclient"
 )
 
-func Dc(conn net.Conn, id string) {
+func DockerReadLog() io.ReadCloser {
 	docker, err := dockerclient.NewDockerClient(*sock, nil)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -21,14 +22,19 @@ func Dc(conn net.Conn, id string) {
 		Tail:   100,
 	})
 	if err != nil {
-		conn.Write([]byte(err.Error()))
-		conn.Close()
-		return
+		// Output Fatal log
+		fmt.Println("Fatal Initial Docker client error")
+		os.Exit(1)
+		return nil
 	}
+	return r
+}
 
+// Dc return log stream to a socket connection
+func Dc(conn net.Conn, id string) {
+	r := DockerReadLog()
 	_, err = io.Copy(conn, r)
 	if err != nil {
 		fmt.Println(err.Error() + "error output")
 	}
-
 }
