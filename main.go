@@ -19,7 +19,7 @@ func main() {
 	ServerMod := flag.Bool("servermod", true, "open server module")
 	FileMod := flag.Bool("filemod", false, "open file module")
 	WatchContainers := flag.String("wc", "", "watch containers split name by ,")
-	//FileOutputPosition:=flag.String("o", ""
+	FileOutputPosition := flag.String("o", "/tmp/log.out", "choose output file name")
 	flag.Parse()
 	fmt.Println("launch server")
 
@@ -29,8 +29,12 @@ func main() {
 	}
 
 	if *FileMod == true {
-
+		go OpenFile()
 	}
+}
+
+func OpenFile() {
+
 }
 
 func OpenServer() {
