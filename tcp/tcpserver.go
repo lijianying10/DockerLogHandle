@@ -1,14 +1,17 @@
-package main
+package tcp
 
 import (
+	"DockerLogHandle/dockerclient"
+	"DockerLogHandle/global"
 	"bufio"
 	"fmt"
 	"net"
 	"os"
 )
 
-func OpenServer() {
-	ln, err := net.Listen("tcp", ":"+*port)
+func OpenServer(c chan bool) {
+	fmt.Println("server listen: ", global.Port)
+	ln, err := net.Listen("tcp", ":"+global.Port)
 	if err != nil {
 		fmt.Println("err listen", err.Error())
 		os.Exit(2)
@@ -18,7 +21,7 @@ func OpenServer() {
 		conn, _ := ln.Accept()
 		go ConnHandler(conn)
 	}
-
+	c <- true
 }
 
 // ConnHandler test godoc
@@ -35,6 +38,6 @@ func ConnHandler(conn net.Conn) {
 		}
 		fmt.Print("Message Received:", string(message))
 		conn.Write([]byte("you are watching container :" + message))
-		Dc(conn, message[:len(message)-2])
+		dockerclient.DataWriteToTCPConnection(conn, message[:len(message)-2])
 	}
 }
